@@ -1,11 +1,4 @@
 --------------------------------------------------------
---  DDL for Sequence ROOM_ROOMID_SEQ
---------------------------------------------------------
-
-CREATE SEQUENCE  "GROUP6"."ROOM_ROOMID_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 9 CACHE 20 NOORDER  NOCYCLE  NOKEEP  NOSCALE  GLOBAL ;
-
-
---------------------------------------------------------
 --  DDL for Table MEMBER
 --------------------------------------------------------
 
