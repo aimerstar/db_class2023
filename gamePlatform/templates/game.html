@@ -1,0 +1,26 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}BookStore{% endblock title%}
+
+{% block content%}
+<br/>
+<div class="container-xl">
+    <form method="post" action={{ url_for('game.gameStart') }}>
+        <center>
+              <img width="500px" height="300px" src="../static/img/game.png">
+        </center>
+        <br/>
+        <center> 
+            <div class="option">
+                <button class="btn btn-primary" type="submit" value="end" name="end">結束遊戲</button>
+            </div>
+        </center>
+    </form>
+</div>
+{% if msg %}
+  <p class="error"><strong>訊息:</strong> {{ msg }}
+{% endif %}
+{% endblock content%}

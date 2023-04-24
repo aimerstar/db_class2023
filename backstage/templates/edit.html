@@ -1,0 +1,44 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+
+{% endblock head %}
+
+{% block title %}遊戲後台管理系統{% endblock title%}
+
+{% block content%}
+
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" enctype=multipart/form-data action={{ url_for('manager.edit') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th>遊戲編號</th>
+        <td><input class="form-control" type="text" value="{{ data.遊戲編號 }}" name="gid" readonly class="id_input"></td>
+      </tr>
+      <tr>
+        <th>遊戲名稱</th>
+        <td><input class="form-control" type="text" value="{{ data.遊戲名稱 }}" name="name" required></td>
+      </tr>
+      <tr>
+        <th>遊戲說明</th>
+        <td>
+          <textarea class="form-control" name="description">{{ data.遊戲說明 }}</textarea>
+        </td>
+      </tr>
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-outline-success" type="submit">確定修改</button> 
+        <a href="{{ url_for('manager.productManager') }}"><button class="btn btn-outline-danger">回遊戲管理</button></a>
+      </div>
+    </center>
+
+  </form>
+</div>
+
+
+
+{% endblock content%}

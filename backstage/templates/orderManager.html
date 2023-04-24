@@ -1,0 +1,141 @@
+{% extends "backstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+<!-- website title -->
+{% block title %} 會員管理 {% endblock title %}
+
+{% block content %}
+<!-- website content -->
+
+<script>
+    $(document).ready(function(){
+        $("#keyword").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#orderlist tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+
+
+{% for i in orderData %}
+<div class="modal fade" id="staticBackdrop{{i.會員編號}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">好友列表</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th><center>好友編號</center></th>
+                            <th><center>好友名稱</center></th>
+                            <th><center>好友帳號</center></th>
+                        </tr>
+                            
+                        {% for j in orderdetail %}
+                        {% if j.會員編號 == i.會員編號 %}
+                        <tr>
+                            <td> <center>{{ j.好友編號 }}</center></td>
+                            <td> <center>{{ j.好友名稱 }}</center></td>
+                            <td> <center>{{ j.好友帳號 }}</center></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">回上頁</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for i in orderData %}
+<div class="modal fade" id="staticBackdrop1{{i.會員編號}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">黑名單列表</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th><center>黑名單編號</center></th>
+                            <th><center>黑名單名稱</center></th>
+                            <th><center>黑名單帳號</center></th>
+                        </tr>
+                            
+                        {% for b in blackdetail %}
+                        {% if b.會員編號 == i.會員編號 %}
+                        <tr>
+                            <td> <center>{{ b.黑名單編號 }}</center></td>
+                            <td> <center>{{ b.黑名單名稱 }}</center></td>
+                            <td> <center>{{ b.黑名單帳號 }}</center></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">回上頁</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<br/>
+<div class="d-flex justify-content-between container-xxl">
+    <div class="d-flex col-sm-4">
+        <span class="input-group-text" id="basic-addon1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        </span>
+        <input class="form-control me-2" id="keyword" placeholder="搜尋" aria-label="Search">
+    </div>
+</div>
+
+<br/>
+
+<div class="container-xxl">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th width="15%"><center>會員編號</center></th>
+            <th width="15%"><center>會員名稱</center></th>
+            <th width="25%"><center>會員帳號</center></th>
+            <th><center>操作</center></th>
+        </tr>
+    </thead>
+    <tbody id="orderlist">
+    {% for i in orderData %}
+        <tr>
+            <td><center>{{ i.會員編號 }}</center></td>
+            <td><center>{{ i.會員名稱 }}</center></td>
+            <td><center>{{ i.會員帳號 }}</center></td>
+            <td><center>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{i.會員編號}}">
+                    查看好友
+                </button>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{i.會員編號}}">
+                    查看黑名單
+                </button>
+            </center></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock content %}

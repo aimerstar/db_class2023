@@ -1,0 +1,112 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}房間大廳{% endblock title%}
+
+{% block content%}
+<br/>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  
+<script language="javascript">
+
+  alert('您沒有管理員的權限喔！');
+
+</script>
+
+{% endif %}
+{% endwith %}
+
+<div class="book_table container-xxl">
+  <div class="input-group">
+  <form class="d-flex col-sm-6" action="{{ url_for('game.room', keyword=1) }}">
+    <div class="input-group">
+    <span class="input-group-text" id="basic-addon1">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+    </span>
+    <input name='keyword' class="form-control me-2" type="search" placeholder="搜尋大廳" aria-label="Search">
+    </div>
+  </form>
+  <div class="d-flex col-sm-6">
+    <a href="{{ url_for('game.createRoom') }}"><button class="btn btn-primary" type="submit">創建房間</button></a>
+    &nbsp&nbsp
+    <a href="{{ url_for('game.joinList') }}"><button class="btn btn-primary" type="submit">返回房間</button></a>   
+  </div>
+  </div>
+  <br/>
+  <form method="post" action={{ url_for('game.room') }}>
+      
+      
+      {% for room in room_data %}
+      {% if loop.index % 3 == 1 %}
+      <div class="row">
+      {% endif %}
+      
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{room.房間名稱}}</h5>
+              <p class="card-text">人數 : {{room.房間現在人數}} / {{room.房間總人數}} &nbsp&nbsp&nbsp&nbsp房主 :{{room.房主編碼}}  {{room.房主名稱}}</p>
+              <p class="card-text">房間編碼 :{{room.房間編碼}}</p>
+              <button class="btn btn-outline-success" type="submit" value="{{room.房主編碼}},{{room.房間編碼}}" name="addRoom" >加入房間</button>
+            </div>
+          </div>
+        </div>
+
+        {% if loop.index % 3 == 0 %}
+        </div><br/>
+        {% endif %}
+            
+      {% endfor %}
+    </table>
+  </form>
+
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      {% if page == 1 %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('game.room', page=page-1) }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+      {% for i in range(1, count+1) %}
+      {% if single == 1 %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('game.room', keyword=keyword, page=i) }}">{{i}}</a></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('game.room', page=i) }}">{{i}}</a></li>
+      {% endif %}
+      {% endfor %}
+      {% if flag == 1 %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('game.room', page=page+1) }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+
+
+</div>
+
+{% endblock content%}

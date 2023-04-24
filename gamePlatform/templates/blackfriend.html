@@ -1,0 +1,92 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}好友清單{% endblock title%}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages[0] == 'No permission' %}
+  
+<script language="javascript">
+  alert('您沒有使用者的權限喔！');
+</script>
+
+{% endif %}
+{% endwith %}
+
+<br/>
+<div class="container-xl">
+  <form class="d-flex col-sm-6" action="{{ url_for('game.blackfriend', keyword=1) }}">
+    <div class="input-group">
+    <span class="input-group-text" id="basic-addon1">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+    </span>
+    <input name='keyword' class="form-control me-2" type="search" placeholder="搜尋黑名單" aria-label="Search">
+    </div>
+  </form><br/>
+  <form method="post" action={{ url_for('game.blackfriend') }}>
+      <table class="table table-bordered">
+        <tr>
+          <th><center>黑名單編號</center></th>
+          <th><center>黑名單名稱</center></th>
+          <th><center>功能</center></th>
+        </tr>
+        {% for friend in friend_data %}
+        <tr>
+          <td> <center>{{ friend.黑名單編號 }}</center></td>
+          <td> <center>{{ friend.黑名單名稱 }}</center></td>
+          <td>
+            <center>
+              <button class="btn btn-danger" type="submit" value="{{friend.黑名單編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ friend.黑名單名稱 }}\' 嗎？'))">
+                刪除
+              </button>
+            </center>
+        </td>
+        </tr>
+        {% endfor %}
+      </table>
+  </form>
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      {% if page == 1 %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('game.blackfriend', page=page-1) }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+      {% for i in range(1, count+1) %}
+      {% if single == 1 %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('game.blackfriend', keyword=keyword, page=i) }}">{{i}}</a></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('game.blackfriend', page=i) }}">{{i}}</a></li>
+      {% endif %}
+      {% endfor %}
+      {% if flag == 1 %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('game.blackfriend', page=page+1) }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock content%}

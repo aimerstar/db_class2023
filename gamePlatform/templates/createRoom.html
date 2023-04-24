@@ -1,0 +1,38 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}BookStore{% endblock title%}
+
+{% block content%}
+<br/>
+<div class="container-xl">
+    <form method="post" action={{ url_for('game.createRoom') }}>
+        <table class="table table-bordered">
+            <tr><th><center>房間名稱</center></th></tr>
+            <td>
+                <center>
+                    <input class="form-control" name="roomName">
+                </center>
+            </td>
+            <tr><th><center>限制人數</center></th></tr>
+            <td>
+                <center>
+                    <input class="form-control" type="number" onkeyup="value=value.replace(/[^\d]/g,'')" min="1" name="roomNum">
+                </center>
+            </td>
+        </table> 
+        <center> 
+            <div class="option">
+                <button class="btn btn-success" type="submit" value="create" name="create">創建</button>
+                <button class="btn btn-primary" type="submit" value="back" name="back">返回</button>
+            </div>
+        </center>
+
+    </form>
+</div>
+{% if msg %}
+  <p class="error"><strong>訊息:</strong> {{ msg }}
+{% endif %}
+{% endblock content%}

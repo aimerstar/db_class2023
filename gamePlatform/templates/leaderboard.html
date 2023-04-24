@@ -1,0 +1,91 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}排行榜{% endblock title%}
+
+{% block content%}
+<br/>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  
+<script language="javascript">
+
+  alert('您沒有管理員的權限喔！');
+
+</script>
+
+{% endif %}
+{% endwith %}
+
+<div class="book_table container-xxl">
+    <form method="post" action={{ url_for('game.leaderboard') }}>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">會員數</h5>
+                        <p class="card-text">{{memberNum}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">房間數</h5>
+                        <p class="card-text">{{roomNum}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">參加數</h5>
+                        <p class="card-text">{{joinNum}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-sm-6">
+                <h5 class="card-title">總積分排行</h5>
+                <table class="table table-bordered">
+                    <tr>
+                      <th><center>會員編號</center></th>
+                      <th><center>會員名稱</center></th>
+                      <th><center>總分</center></th>
+                    </tr>
+                    {% for score in score_data %}
+                    <tr>
+                      <td> <center>{{ score.會員編號 }}</center></td>
+                      <td> <center>{{ score.會員名稱 }}</center></td>
+                      <td> <center>{{ score.總積分 }}</center></td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+            </div>
+            <div class="col-sm-6">
+                <h5 class="card-title">總參加次數排行</h5>
+                <table class="table table-bordered">
+                    <tr>
+                      <th><center>會員編號</center></th>
+                      <th><center>會員名稱</center></th>
+                      <th><center>總次數</center></th>
+                    </tr>
+                    {% for num in num_data %}
+                    <tr>
+                      <td> <center>{{ num.會員編號 }}</center></td>
+                      <td> <center>{{ num.會員名稱 }}</center></td>
+                      <td> <center>{{ num.總次數 }}</center></td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content%}
