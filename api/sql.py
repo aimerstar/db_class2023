@@ -203,9 +203,19 @@ class Play():
         sql = "INSERT INTO PLAY VALUES (:mId, :roomId, :gameId, TO_DATE(:sTime, 'yyyy/mm/dd hh24:mi:ss'))"
         DB.execute_input(DB.prepare(sql), input)
         DB.commit()
+    
+    def update_play(input):
+        sql = "UPDATE PLAY SET STIME=TO_DATE(:sTime, 'yyyy/mm/dd hh24:mi:ss') WHERE mId=:mId and roomId=:roomId and gameId=:gameId"
+        DB.execute_input(DB.prepare(sql), input)
+        DB.commit()
+    
     def get_play(id, roomId):
         sql = "SELECT * FROM PLAY where MID=:id and roomId=:roomId"
         return DB.fetchone( DB.execute_input( DB.prepare(sql), {'id': id, 'roomId': roomId}))
+    
+    def get_play_poly(id, roomId, gameId):
+        sql = "SELECT * FROM PLAY where MID=:id and roomId=:roomId and gameId=:gameId"
+        return DB.fetchone( DB.execute_input( DB.prepare(sql), {'id': id, 'roomId': roomId, 'gameId': gameId}))
     
 #後台:會員管理
 class Member_List():

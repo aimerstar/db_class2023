@@ -167,7 +167,6 @@ def room():
         for i in room_row:
             friendName = Member.get_name(i[0])
             room_num = Join.find_same_room_num(i[1])
-            print(room_num)
             room = {
                 '房間名稱': i[2],
                 '房間總人數': i[3],
@@ -193,7 +192,6 @@ def room():
         for i in room_row:
             friendName = Member.get_name(i[0])
             room_num = Join.find_same_room_num(i[1])
-            print(room_num)
             room = {
                 '房間名稱': i[2],
                 '房間總人數': i[3],
@@ -306,14 +304,25 @@ def joinList():
         roomId = join[1]
         join_row = Join.find_same_room(roomId)
         for i in join_row:
-            Play.add_play(
-            {
-                'mId' : i[0],
-                'roomId' : roomId,
-                'gameId' : gameId,
-                'sTime' : str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
-            }
-        )
+            play = Play.get_play_poly(i[0], roomId, gameId)
+            if(play is not None):
+                Play.update_play(
+                    {
+                        'mId' : i[0],
+                        'roomId' : roomId,
+                        'gameId' : gameId,
+                        'sTime' : str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+                    }
+                )
+            else:
+                Play.add_play(
+                    {
+                        'mId' : i[0],
+                        'roomId' : roomId,
+                        'gameId' : gameId,
+                        'sTime' : str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+                    }
+                )
         return render_template('game.html', user=current_user.name, gameId = gameId)
     elif "end" in request.form :
         print('end')
@@ -612,7 +621,6 @@ def member():
     else:
         friend_row = Member.get_all_member()
         friend_data = []
-        print(friend_row)
         for i in friend_row:
             friend = {
                 '會員編號': i[0],
@@ -629,7 +637,6 @@ def friend():
     result = Friend.count(current_user.id)
     count = math.ceil(result[0]/5)
     flag = 0
-    print(result[0])
     # 以防管理者誤闖
     if request.method == 'GET':
         if( current_user.role == 'manager'):
@@ -973,7 +980,7 @@ def record():
         for j in range(start, end):
             final_data.append(record_data[j])
         
-        return render_template('record.html', friend_data=final_data, user=current_user.name, page=page, flag=flag, count=count)    
+        return render_template('record.html', record_data=final_data, user=current_user.name, page=page, flag=flag, count=count)    
     
     elif 'keyword' in request.args:
         single = 1
