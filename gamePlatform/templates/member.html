@@ -16,9 +16,21 @@
 
 {% endif %}
 {% endwith %}
-
+<script>
+$(document).ready(function() {
+    // show the alert
+    setTimeout(function() {
+        $(".alert").alert('close');
+    }, 5000);
+});
+</script>
+<style>
+  .container-xl{position: relative;}
+  .alert{position: absolute;top:0px;right:0px;margin-bottom: 0;padding: 5px;width: 200px;}
+  .alert-dismissible .btn-close{padding: 10px;}
+</style>
 <br/>
-<div class="container-xl">
+<div class="container-xl" >
   <form class="d-flex col-sm-6" action="{{ url_for('game.member', keyword=1) }}">
     <div class="input-group">
     <span class="input-group-text" id="basic-addon1">
@@ -29,8 +41,13 @@
     <input name='keyword' class="form-control me-2" type="search" placeholder="搜尋會員" aria-label="Search">
     </div>
   </form>
+  
+
   {% if msg %}
-  <p class="error"><strong>訊息:</strong> {{ msg }}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>  
   {% endif %}
   <br/>
   <form method="post" action={{ url_for('game.member') }}>
@@ -46,12 +63,21 @@
           <td> <center>{{ friend.會員名稱 }}</center></td>
           <td>
             <center>
-                <button class="btn btn-outline-primary" type="submit" value="{{friend.會員編號}}" name="addFriend" onclick="return (confirm('你確定要加 \'{{ friend.會員名稱 }}\' 進好友名單嗎？'))">
-                    加入好友
-                </button>
-                <button class="btn btn-outline-primary" type="submit" value="{{friend.會員編號}}" name="addBlack" onclick="return (confirm('你確定要加 \'{{ friend.會員名稱 }}\' 進黑名名單嗎？'))">
-                    加入黑名單
-                </button>
+              {% if check_addfriend == True %}
+                <button class="btn btn-outline-primary" type="submit" value="{{friend.會員編號}}" name="addFriend" disabled>加入好友</button>
+              {% endif %}
+              <button class="btn btn-primary" type="submit" value="{{friend.會員編號}}" name="addFriend" onclick="return (confirm('你確定要加 \'{{ friend.會員名稱 }}\' 進好友名單嗎？'))">
+                加入好友
+              </button>
+          
+              <!-- {% if check_blackfirend == True  %}
+              <button class="btn btn-outline-primary" type="submit" value="{{friend.會員編號}}" name="addBlack" disabled>
+                加入黑名單
+              </button>
+              {% endif %} -->
+              <button class="btn btn-primary" type="submit" value="{{friend.會員編號}}" name="addBlack" onclick="return (confirm('你確定要加 \'{{ friend.會員名稱 }}\' 進黑名名單嗎？'))">
+                加入黑名單
+              </button>
             </center>
         </td>
         </tr>
@@ -96,4 +122,6 @@
     </ul>
   </nav>
 </div>
+
+
 {% endblock content%}

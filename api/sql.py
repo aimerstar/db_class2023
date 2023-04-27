@@ -57,6 +57,10 @@ class Member():
     def count():
         sql = 'SELECT COUNT(*) FROM MEMBER'
         return DB.fetchone(DB.execute( DB.connect(), sql))
+    
+    def ex_get_member(id):
+        sql = 'SELECT * FROM MEMBER WHERE MID != :id '
+        return DB.fetchall(DB.execute_input( DB.prepare(sql), {'id':id}))
 
 class Room():
     def count():
@@ -105,6 +109,11 @@ class Friend():
 
     def delete_friend(id, friendId):
         sql = 'DELETE FROM ADDFRIEND WHERE MID=:id and FRIENDID=:friendId '
+        DB.execute_input(DB.prepare(sql), {'id': id, 'friendId':friendId})
+        DB.commit()
+
+    def check_addfriend(id,friendId):
+        sql = 'SELECT * FROM ADDFRIEND WHERE MID=:id and FRIENDID=:friendId '
         DB.execute_input(DB.prepare(sql), {'id': id, 'friendId':friendId})
         DB.commit()
 
@@ -188,6 +197,7 @@ class Record():
         sql = "INSERT INTO RECORD VALUES (:mId, :roomId, :gameId, :gameTime, :score)"
         DB.execute_input( DB.prepare(sql), input)
         DB.commit()
+    
     
 class Game():
     def get_name(id):

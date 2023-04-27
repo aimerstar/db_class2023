@@ -10,7 +10,7 @@
 <div class="container-xl">
     <form method="post" action={{ url_for('game.gameStart') }}>
         <center>
-              <img width="500px" height="300px" src="../static/img/game.png">
+              <img width="500px" height="300px" src="../static/img/game.gif">
         </center>
         <br/>
         <center> 
@@ -21,6 +21,9 @@
     </form>
 </div>
 {% if msg %}
-  <p class="error"><strong>訊息:</strong> {{ msg }}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ msg }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>  
 {% endif %}
 {% endblock content%}

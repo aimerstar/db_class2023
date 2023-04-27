@@ -4,7 +4,7 @@ from flask import Flask, request, template_rendered, Blueprint
 from flask import url_for, redirect, flash
 from flask import render_template
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from datetime import datetime
+from datetime import timedelta, datetime
 from numpy import identity, product
 import random, string
 from sqlalchemy import null
@@ -476,11 +476,12 @@ def member():
     if "addFriend" in request.form :
         friendId = request.values.get('addFriend')
         friend = Friend.find_friend(current_user.id, friendId)
+        black = BlackFriend.find_friend(current_user.id, friendId)
         msg = ''
-        if (friendId == current_user.id ):     
-            msg = '無法將自己加入清單中'
-        elif (friend is not None and len(friend)!=0):
+        if (friend is not None and len(friend)!=0):
             msg = '已經存在好友清單'
+        elif (black is not None and len(black)!=0):
+            msg = '請先刪除黑名單再加好友'
         else:
             Friend.add_friend(
                 {
@@ -489,7 +490,7 @@ def member():
                 }
             )
 
-        friend_row = Member.get_all_member()
+        friend_row = Member.ex_get_member(current_user.id)
         friend_data = []
 
         for i in friend_row:
@@ -505,12 +506,13 @@ def member():
     if "addBlack" in request.form :
         friendId = request.values.get('addBlack')
         friend = BlackFriend.find_friend(current_user.id, friendId)
+        black = Friend.find_friend(current_user.id, friendId)
         msg = ''
 
-        if (friendId == current_user.id ):     
-            msg = '無法將自己加入清單中'
-        elif (friend is not None and len(friend)!=0):
+        if (friend is not None and len(friend)!=0):
             msg = '已經存在黑名單'
+        elif (black is not None and len(black)!=0):
+            msg = '請先刪除好友再加黑名單'
         else:
             BlackFriend.add_friend(
                 {
@@ -519,7 +521,7 @@ def member():
                 }
             )
 
-        friend_row = Member.get_all_member()
+        friend_row = Member.ex_get_member(current_user.id)
         friend_data = []
 
         for i in friend_row:
@@ -572,7 +574,7 @@ def member():
         start = (page - 1) * 5
         end = page * 5
         
-        friend_row = Member.get_all_member()
+        friend_row = Member.ex_get_member(current_user.id)
         friend_data = []
         final_data = []
 
@@ -619,7 +621,7 @@ def member():
         return render_template('member.html', keyword=search, single=single, friend_data=friend_data, user=current_user.name, page=1, flag=flag, count=count)    
     
     else:
-        friend_row = Member.get_all_member()
+        friend_row = Member.ex_get_member(current_user.id)
         friend_data = []
         for i in friend_row:
             friend = {
@@ -1056,3 +1058,4 @@ def leaderboard():
             num_data.append(data)
 
     return render_template('leaderboard.html', user=current_user.name, memberNum=memberNum, roomNum=roomNum, joinNum=joinNum, score_data=score_data , num_data=num_data )
+
