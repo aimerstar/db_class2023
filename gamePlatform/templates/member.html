@@ -16,19 +16,7 @@
 
 {% endif %}
 {% endwith %}
-<script>
-$(document).ready(function() {
-    // show the alert
-    setTimeout(function() {
-        $(".alert").alert('close');
-    }, 5000);
-});
-</script>
-<style>
-  .container-xl{position: relative;}
-  .alert{position: absolute;top:0px;right:0px;margin-bottom: 0;padding: 5px;width: 200px;}
-  .alert-dismissible .btn-close{padding: 10px;}
-</style>
+
 <br/>
 <div class="container-xl" >
   <form class="d-flex col-sm-6" action="{{ url_for('game.member', keyword=1) }}">

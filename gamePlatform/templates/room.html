@@ -35,7 +35,11 @@
   <div class="d-flex col-sm-6">
     <a href="{{ url_for('game.createRoom') }}"><button class="btn btn-primary" type="submit">創建房間</button></a>
     &nbsp&nbsp
-    <a href="{{ url_for('game.joinList') }}"><button class="btn btn-primary" type="submit">返回房間</button></a>   
+    {% for room in room_data %}
+    {% if room.房主名稱 == user %}
+    <a href="{{ url_for('game.joinList', rid=room.房間編碼) }}"><button class="btn btn-primary" type="submit">返回房間</button></a>   
+    {% endif %}
+    {% endfor %}
   </div>
   </div>
   <br/>
@@ -51,9 +55,10 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{room.房間名稱}}</h5>
-              <p class="card-text">人數 : {{room.房間現在人數}} / {{room.房間總人數}} &nbsp&nbsp&nbsp&nbsp房主 :{{room.房主編碼}}  {{room.房主名稱}}</p>
+              <p class="card-text">人數 : {{room.房間現在人數}} / {{room.房間總人數}} &nbsp&nbsp&nbsp&nbsp房主 :{{room.房主名稱}}</p>
               <p class="card-text">房間編碼 :{{room.房間編碼}}</p>
               <button class="btn btn-outline-success" type="submit" value="{{room.房主編碼}},{{room.房間編碼}}" name="addRoom" >加入房間</button>
+              <!-- <a class="btn btn-outline-success" href={{ url_for('game.joinList', rid=room.房間編碼) }} value="{{room.房主編碼}}" name="addRoom" >加入房間</a> -->
             </div>
           </div>
         </div>

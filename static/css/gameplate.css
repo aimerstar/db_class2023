@@ -1,0 +1,17 @@
+.container-xl {
+  position: relative;
+}
+
+.alert {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin-bottom: 0;
+  padding: 5px;
+  width: 400px;
+}
+
+.alert-dismissible .btn-close {
+  padding: 10px;
+}
+/*# sourceMappingURL=gameplate.css.map */
