@@ -38,7 +38,7 @@ def room():
         blackFriend = BlackFriend.find_friend(mid, current_user.id)
 
         if (join_data is not None and len(join_data)!=0):
-            msg = '已經進入房間無法再進入另一個'
+            msg = '請先離開舊房間再加入新的'
             roomId = join_data[0][1]
         elif (room_num > num):
             msg = '超過人數上限無法進入'
@@ -222,9 +222,9 @@ def createRoom():
             join = Join.find_join(current_user.id)
             msg = ''
             if (room is not None and len(room)!=0):
-                msg = '已經建立房間無法再建立，直接進入房間'
+                msg = '請先離開舊房間再建立新的'
             elif (join is not None and len(join)!=0):
-                msg = '已經參加一個房間無法再建立另一個'
+                msg = '請先離開舊房間再建立新的'
             else:
                 number = str(random.randrange( 10000, 99999))
                 en = random.choice(string.ascii_letters)
