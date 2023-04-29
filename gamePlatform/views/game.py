@@ -226,7 +226,10 @@ def createRoom():
             elif (join is not None and len(join)!=0):
                 msg = '已經參加一個房間無法再建立另一個'
             else:
-                roomId = str(uuid.uuid4()).replace('-','')
+                number = str(random.randrange( 10000, 99999))
+                en = random.choice(string.ascii_letters)
+                roomId = en + number
+                # roomId = str(uuid.uuid4()).replace('-','')
                 jTime = str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
                 Room.add_room(
                     {
@@ -407,7 +410,10 @@ def gameStart():
         mId = Room.get_Room_by_sTime(roomId)[0]
         roomName = Room.get_Room_by_sTime(roomId)[2]
         roomNum = Room.get_Room_by_sTime(roomId)[3]
-        roomId_new = str(uuid.uuid4()).replace('-','')
+        number = str(random.randrange( 10000, 99999))
+        en = random.choice(string.ascii_letters)
+        roomId_new = en + number
+        # roomId_new = str(uuid.uuid4()).replace('-','')
         for i in join_row:
             sTime = Play.get_play(i[0], roomId)[3]
             Record.add_record(
