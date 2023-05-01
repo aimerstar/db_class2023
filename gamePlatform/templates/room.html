@@ -21,6 +21,14 @@
 {% endwith %}
 
 <div class="book_table container-xxl">
+  
+  {% if msg %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>  
+  {% endif %}
+
   <div class="input-group">
   <form class="d-flex col-sm-6" action="{{ url_for('game.room', keyword=1) }}">
     <div class="input-group">
@@ -35,16 +43,13 @@
   <div class="d-flex col-sm-6">
     <a href="{{ url_for('game.createRoom') }}"><button class="btn btn-primary" type="submit">創建房間</button></a>
     &nbsp&nbsp
-    {% for room in room_data %}
-    {% if room.房主名稱 == user %}
-    <a href="{{ url_for('game.joinList', rid=room.房間編碼) }}"><button class="btn btn-primary" type="submit">返回房間</button></a>   
-    {% endif %}
-    {% endfor %}
+    <a href="{{ url_for('game.joinList') }}"><button class="btn btn-primary" type="submit">返回房間</button></a>   
   </div>
   </div>
   <br/>
   <form method="post" action={{ url_for('game.room') }}>
-      
+    
+  
       
       {% for room in room_data %}
       {% if loop.index % 3 == 1 %}

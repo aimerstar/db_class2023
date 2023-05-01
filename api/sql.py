@@ -71,6 +71,10 @@ class Room():
         sql = "SELECT * FROM ROOM WHERE MID = :mId AND INVALID='Y' "
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'mId': mId}))
     
+    def get_Room_num(rid):
+        sql = "SELECT * FROM ROOM WHERE roomId = :rid AND INVALID='Y' "
+        return DB.fetchone(DB.execute_input(DB.prepare(sql), {'rid': rid}))
+    
     def get_Room_by_sTime(roomId):
         sql ="SELECT * FROM ROOM WHERE ROOMID = :roomId AND INVALID='Y' "
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'roomId': roomId}))
@@ -88,6 +92,14 @@ class Room():
         sql = "UPDATE ROOM SET INVALID='N' WHERE MID=:mId and roomId=:roomId"
         DB.execute_input(DB.prepare(sql), input)
         DB.commit()
+    
+    def check_room_ex_black(id):
+        sql = "SELECT * FROM ROOM WHERE INVALID='Y' and ROOM.MID NOT IN(SELECT BLACKID FROM ADDBLACK WHERE ADDBLACK.MID = :id)"
+        return DB.fetchall(DB.execute_input( DB.prepare(sql), {'id':id}))
+    
+    def check_room_manger(id):
+        sql = "SELECT MID FROM ROOM WHERE INVALID='Y' and ROOM.MID = :id "
+        return DB.fetchall(DB.execute_input( DB.prepare(sql), {'id':id}))
 
 class Friend():
     def get_all_friend(id):
@@ -144,6 +156,10 @@ class Join():
     def find_join(id):
         sql = 'SELECT * FROM JOINGAME where MID = :id '
         return DB.fetchall( DB.execute_input( DB.prepare(sql), {'id': id}))
+    
+    # def check_if_join(rid):
+    #     sql = "SELECT name,ROOMNAME FROM JOINGAME,ROOM,MEMBER where JOINGAME.ROOMID = :rid AND JOINGAME.MID = ROOM.MID AND room.invalid = 'Y' AND MEMBER.MID=JOINGAME.MID"
+    #     return DB.fetchall( DB.execute_input( DB.prepare(sql), {'id': rid}))
     
     def find_self_join(id):
         sql = 'SELECT * FROM JOINGAME where MID = :id '

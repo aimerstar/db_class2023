@@ -33,12 +33,12 @@ def room():
         mid = request.values.get('addRoom').split(",")[0] # 房主MID
         roomId = request.values.get('addRoom').split(",")[1] # 房間編碼
         join_data = Join.find_join(current_user.id)
-        room_num = Join.find_same_room_num(roomId)
-        num = Room.get_Room(mid)[3]
+        room_num = Join.find_same_room_num(roomId) #目前人數
+        num = Room.get_Room_num(roomId)[3] #原設人數
         blackFriend = BlackFriend.find_friend(mid, current_user.id)
 
         if (join_data is not None and len(join_data)!=0):
-            msg = '請先離開舊房間再加入新的'
+            msg = '已在房間內，請先離開舊房間才能加入新的'
             roomId = join_data[0][1]
         elif (room_num > num):
             msg = '超過人數上限無法進入'
@@ -80,7 +80,7 @@ def room():
             }
             join_data.append(friend)
             
-        return render_template('joinList.html', join_data=join_data, game_data=game_data, user=current_user.name, msg=msg)
+        return render_template('joinList.html', join_data=join_data,  game_data=game_data, user=current_user.name, msg=msg)
     
 
     if 'keyword' in request.args and 'page' in request.args:
@@ -128,7 +128,7 @@ def room():
         start = (page - 1) * 9
         end = page * 9
         
-        room_row = Room.get_all_room()
+        room_row = Room.check_room_ex_black(current_user.id)
         room_data = []
         final_data = []
         
@@ -187,7 +187,7 @@ def room():
         return render_template('room.html', keyword=search, single=single, room_data=room_data, user=current_user.name, page=1, flag=flag, count=count)    
     
     else:
-        room_row = Room.get_all_room()
+        room_row = Room.check_room_ex_black(current_user.id)
         room_data = []
         for i in room_row:
             friendName = Member.get_name(i[0])
@@ -219,12 +219,12 @@ def createRoom():
             roomName = request.values.get('roomName')
             roomNum = request.values.get('roomNum')
             room = Room.get_Room(current_user.id)
-            join = Join.find_join(current_user.id)
+            # join = Join.find_join(current_user.id)
             msg = ''
             if (room is not None and len(room)!=0):
                 msg = '請先離開舊房間再建立新的'
-            elif (join is not None and len(join)!=0):
-                msg = '請先離開舊房間再建立新的'
+            # elif (join is not None and len(join)!=0):
+            #     msg = '請先離開舊房間再建立新的'
             else:
                 number = str(random.randrange( 10000, 99999))
                 en = random.choice(string.ascii_letters)
@@ -289,7 +289,7 @@ def joinList():
 
     game_row = Game.get_all_game()
     game_data = []
-
+    check_manger = False
     for i in game_row:
         game = {
             '遊戲編號': i[0],
@@ -327,39 +327,40 @@ def joinList():
                     }
                 )
         return render_template('game.html', user=current_user.name, gameId = gameId)
-    elif "end" in request.form :
-        print('end')
+    # elif "end" in request.form :
+    #     print('end')
         # 只有房主可以結束房間
         # 房主結束房間後 刪除房間資料以及所有參加紀錄
+        # roomName = request.values.get('roomName')
     elif "leave" in request.form :
         print('leave')
         join = Join.find_self_join(current_user.id)
+        check = Room.check_room_manger(current_user.id)
         print(join)
         if (join is None):
             msg = '尚未參加任何一個房間'
             return redirect(url_for('game.room'))
-        roomId = join[1]
-        print(roomId)
-        Join.delete_join(current_user.id)
-        # 如果沒間都沒有參加人，房間作廢
-        # TODO 如果房主離開也要更新房間
-        room_num = Join.find_same_room_num(roomId)
-        print(room_num)
-        if(room_num==0):
-            mId = Room.get_Room_by_sTime(roomId)[0]
+        # 判斷如果是房主離開房間即解散房間->更新房間狀態Ｎ
+        if (check is not None):
+            mId = current_user.id
+            roomId = join[1]
             Room.update_room(
             {
                 'mId' : mId,
                 'roomId' : roomId
             }
         )
+        Join.delete_join(current_user.id)
 
     elif "delete" in request.form :
         print('delete')
         friendId = request.values.get('delete')
+        check = Room.check_room_manger(friendId)
+        print(check)
         if(friendId==current_user.id):
             msg = '不可以自己踢掉自己'
-        # TODO 不可以踢掉房主
+        elif(check is not None and len(check)!=0):
+            msg = '不可以踢掉房主'
         else:
             Join.delete_join(friendId)
     
@@ -380,8 +381,9 @@ def joinList():
             '會員名稱': friendName
         }
         join_data.append(friend)
+
             
-    return render_template('joinList.html', join_data=join_data, game_data=game_data, user=current_user.name, msg=msg)
+    return render_template('joinList.html', join_data=join_data, check_manger=check_manger, game_data=game_data, user=current_user.name, msg=msg)
 
 @game.route('/gameStart', methods=['GET', 'POST'])
 @login_required
